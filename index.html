@@ -123,45 +123,43 @@
     <script>
         async function fetchData() {
             const url = '/.netlify/functions/fetchData';
+            const refreshButton = document.getElementById('refreshButton');
+            const spinner = refreshButton.querySelector('.spinner');
+            const buttonText = refreshButton.querySelector('.text');
+            const serverCountText = document.getElementById('serverCount');
+            const memberCountText = document.getElementById('memberCount');
+
+            // Show loading state
+            serverCountText.classList.add('loading-text');
+            memberCountText.classList.add('loading-text');
+            buttonText.classList.add('hidden'); 
+            spinner.classList.remove('hidden'); 
+            refreshButton.disabled = true; 
+
             try {
-                const refreshButton = document.getElementById('refreshButton');
-                const spinner = refreshButton.querySelector('.spinner');
-                const buttonText = refreshButton.querySelector('.text');
-                const serverCountText = document.getElementById('serverCount');
-                const memberCountText = document.getElementById('memberCount');
-
-                serverCountText.classList.add('loading-text');
-                memberCountText.classList.add('loading-text');
-
-                buttonText.classList.add('hidden'); 
-                spinner.classList.remove('hidden'); 
-                refreshButton.disabled = true; 
-
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Network response was not ok');
 
                 const jsonData = await response.json();
-                serverCountText.innerText = `Server Count: ${jsonData.serverCount}`;
-                memberCountText.innerText = `Member Count: ${jsonData.memberCount}`;
+                // Check if the data is available
+                if (jsonData) {
+                    serverCountText.innerText = `Server Count: ${jsonData.serverCount || 0}`;
+                    memberCountText.innerText = `Member Count: ${jsonData.memberCount || 0}`;
+                } else {
+                    serverCountText.innerText = 'No data found';
+                    memberCountText.innerText = 'No data found';
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
-                document.getElementById('serverCount').innerText = 'Failed to load server count';
-                document.getElementById('memberCount').innerText = 'Failed to load member count';
+                serverCountText.innerText = 'Failed to load server count';
+                memberCountText.innerText = 'Failed to load member count';
             } finally {
-                setTimeout(() => {
-                    const refreshButton = document.getElementById('refreshButton');
-                    const spinner = refreshButton.querySelector('.spinner');
-                    const buttonText = refreshButton.querySelector('.text');
-                    const serverCountText = document.getElementById('serverCount');
-                    const memberCountText = document.getElementById('memberCount');
-
-                    serverCountText.classList.remove('loading-text');
-                    memberCountText.classList.remove('loading-text');
-
-                    buttonText.classList.remove('hidden');
-                    spinner.classList.add('hidden');
-                    refreshButton.disabled = false; 
-                }, 2000); 
+                // Hide loading state
+                serverCountText.classList.remove('loading-text');
+                memberCountText.classList.remove('loading-text');
+                buttonText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                refreshButton.disabled = false; 
             }
         }
 

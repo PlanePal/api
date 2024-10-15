@@ -1,23 +1,42 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { firebaseConfig } from "./firebaseConfig";  // Your Firebase config
+const db = require('./firebaseConfig');
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+exports.handler = async (event) => {
+    const headers = {
+        'Access-Control-Allow-Origin': '*', // Replace with your domain if needed
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+    };
 
-export async function fetchData() {
-    try {
-        // Reading data from Firestore
-        const dataRef = doc(db, 'stats', 'serverData'); // 'stats' is the collection and 'serverData' is the document
-        const docSnap = await getDoc(dataRef);
-
-        if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-            return docSnap.data(); // This will contain your serverCount and memberCount
-        } else {
-            console.log("No such document!");
-        }
-    } catch (error) {
-        console.error("Error reading data from Firestore:", error);
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers,
+            body: '',
+        };
     }
-}
+
+    try {
+        const doc = await db.collection('your-collection-name').doc('your-doc-id').get();
+
+        if (!doc.exists) {
+            return {
+                statusCode: 404,
+                headers,
+                body: JSON.stringify({ message: "No data found" }),
+            };
+        }
+
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(doc.data()),
+        };
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ message: "Error fetching data", error: error.message }),
+        };
+    }
+};
