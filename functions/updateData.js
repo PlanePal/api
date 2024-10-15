@@ -1,4 +1,5 @@
 const db = require('./firebaseConfig');
+const admin = require('firebase-admin');
 
 exports.handler = async (event) => {
     const headers = {
