@@ -1,8 +1,8 @@
-const db = require('./firebaseConfig');
+const db = require('./firebaseConfig'); // Import the Firestore instance
 
 exports.handler = async (event) => {
     const headers = {
-        'Access-Control-Allow-Origin': '*', // Replace with your domain if needed
+        'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
     };
@@ -16,10 +16,8 @@ exports.handler = async (event) => {
     }
 
     try {
-        // Parse the JSON body
         const data = JSON.parse(event.body);
 
-        // Ensure data is present
         if (!data.serverCount || !data.memberCount) {
             return {
                 statusCode: 400,
@@ -28,7 +26,6 @@ exports.handler = async (event) => {
             };
         }
 
-        // Update Firestore with the data
         await db.collection('data').doc('counts').set({
             serverCount: data.serverCount,
             memberCount: data.memberCount,
