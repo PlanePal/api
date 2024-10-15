@@ -1,5 +1,7 @@
-const db = require('./firebaseConfig');
-const admin = require('firebase-admin');
+const { getFirestore } = require('firebase-admin/firestore');
+
+// Initialize Firestore
+const db = getFirestore();
 
 exports.handler = async (event) => {
     const headers = {
@@ -17,7 +19,8 @@ exports.handler = async (event) => {
     }
 
     try {
-        const doc = await db.collection('your-collection-name').doc('your-doc-id').get();
+        // Fetch document from Firestore
+        const doc = await db.collection('data').doc('counts').get();
 
         if (!doc.exists) {
             return {

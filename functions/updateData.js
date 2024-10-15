@@ -1,5 +1,4 @@
 const db = require('./firebaseConfig');
-const admin = require('firebase-admin');
 
 exports.handler = async (event) => {
     const headers = {
@@ -17,8 +16,10 @@ exports.handler = async (event) => {
     }
 
     try {
+        // Parse the JSON body
         const data = JSON.parse(event.body);
 
+        // Ensure data is present
         if (!data.serverCount || !data.memberCount) {
             return {
                 statusCode: 400,
@@ -27,7 +28,8 @@ exports.handler = async (event) => {
             };
         }
 
-        await db.collection('your-collection-name').doc('your-doc-id').set({
+        // Update Firestore with the data
+        await db.collection('data').doc('counts').set({
             serverCount: data.serverCount,
             memberCount: data.memberCount,
         });
