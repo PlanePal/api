@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
     };
 
     try {
-        // You can replace this with your desired method to store the data
+        // Save data to data.json
         fs.writeFileSync('./api/data.json', JSON.stringify(data, null, 2));
         
         return {
