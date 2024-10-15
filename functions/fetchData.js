@@ -1,8 +1,8 @@
-const db = require('./firebaseConfig'); // Import the Firestore instance
+const db = require('./firebaseConfig');
 
 exports.handler = async (event) => {
     const headers = {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': '*', // Replace with your domain if needed
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
     };
@@ -16,7 +16,7 @@ exports.handler = async (event) => {
     }
 
     try {
-        const doc = await db.collection('data').doc('counts').get();
+        const doc = await db.collection('data').doc('counts').get(); // Ensure correct collection and document IDs
 
         if (!doc.exists) {
             return {
