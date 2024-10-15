@@ -1,21 +1,29 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { firebaseConfig } from "./firebaseConfig";  // If this is where your firebase config is stored
+import { db } from './firebaseConfig';
+import { doc, setDoc } from "firebase/firestore";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-export async function updateData(data) {
+exports.handler = async function(event, context) {
     try {
-        // Writing data to Firestore
-        const dataRef = doc(db, 'stats', 'serverData'); // 'stats' is the collection and 'serverData' is the document
-        await setDoc(dataRef, {
+        // Parse incoming data from the request body
+        const data = JSON.parse(event.body);
+
+        // Reference to a Firestore document (for example, in a 'stats' collection)
+        const docRef = doc(db, 'stats', 'counts');
+
+        // Update the document with the new data
+        await setDoc(docRef, {
             serverCount: data.serverCount,
-            memberCount: data.memberCount
+            memberCount: data.memberCount,
         });
 
-        console.log("Data successfully written to Firestore!");
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Data updated successfully' }),
+        };
     } catch (error) {
-        console.error("Error writing data to Firestore:", error);
+        console.error('Error updating data:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: 'Error updating data', error: error.message }),
+        };
     }
-}
+};
