@@ -17,7 +17,7 @@ exports.handler = async (event, context) => {
 
     try {
         // Save data to data.json
-        fs.writeFileSync('./api/data.json', JSON.stringify(data, null, 2));
+        fs.writeFileSync('./data.json', JSON.stringify(data, null, 2));
         
         return {
             statusCode: 200,
