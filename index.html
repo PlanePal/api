@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanePal API</title>
+    <link rel="icon" type="image/ico" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            user-select: none;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #ffffff;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #ffffff;
+        }
+
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 25px;
+            background-color: #FFFFFF;
+            color: #000000;
+            cursor: pointer;
+            font-size: 16px;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 10px;
+        }
+
+        button:active {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top: 3px solid #000000;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 12.5px;
+            left: 50px;
+            transform: translateX(-50%);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner.hidden {
+            display: none;
+        }
+
+        .text.hidden {
+            visibility: hidden;
+        }
+
+        .loading-text {
+            animation: pulse 1s infinite ease-in-out;
+            color: #555;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        .learn-more {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .learn-more i {
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>PlanePal API</h1>
+        <div id="data">
+            <p id="serverCount">Loading server count...</p>
+            <p id="memberCount">Loading member count...</p>
+        </div>
+        <button id="refreshButton">
+            <span class="spinner hidden"></span>
+            <span class="text">Refresh</span>
+        </button>
+        <button class="learn-more" onclick="window.open('https://github.com/DevJSTAR/planepal-api/blob/main/README.md', '_blank')">
+            Learn More
+            <i class="fas fa-external-link-alt"></i>
+        </button>
+    </div>
+    <script>
+        async function fetchData() {
+            const url = '/.netlify/functions/fetchData';
+            try {
+                const refreshButton = document.getElementById('refreshButton');
+                const spinner = refreshButton.querySelector('.spinner');
+                const buttonText = refreshButton.querySelector('.text');
+                const serverCountText = document.getElementById('serverCount');
+                const memberCountText = document.getElementById('memberCount');
+
+                serverCountText.classList.add('loading-text');
+                memberCountText.classList.add('loading-text');
+
+                buttonText.classList.add('hidden'); 
+                spinner.classList.remove('hidden'); 
+                refreshButton.disabled = true; 
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const jsonData = await response.json();
+                serverCountText.innerText = `Server Count: ${jsonData.serverCount}`;
+                memberCountText.innerText = `Member Count: ${jsonData.memberCount}`;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('serverCount').innerText = 'Failed to load server count';
+                document.getElementById('memberCount').innerText = 'Failed to load member count';
+            } finally {
+                setTimeout(() => {
+                    const refreshButton = document.getElementById('refreshButton');
+                    const spinner = refreshButton.querySelector('.spinner');
+                    const buttonText = refreshButton.querySelector('.text');
+                    const serverCountText = document.getElementById('serverCount');
+                    const memberCountText = document.getElementById('memberCount');
+
+                    serverCountText.classList.remove('loading-text');
+                    memberCountText.classList.remove('loading-text');
+
+                    buttonText.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                    refreshButton.disabled = false; 
+                }, 2000); 
+            }
+        }
+
+        async function updateData(serverCount, memberCount) {
+            const url = '/.netlify/functions/updateData';
+            const requestBody = {
+                serverCount,
+                memberCount,
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+                if (!response.ok) throw new Error('Failed to update data');
+
+                const result = await response.json();
+                console.log(result.message);
+            } catch (error) {
+                console.error('Error updating data:', error);
+            }
+        }
+
+        window.onload = fetchData;
+        document.getElementById('refreshButton').addEventListener('click', fetchData);
+    </script>
+</body>
+</html>
