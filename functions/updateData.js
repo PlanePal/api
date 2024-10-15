@@ -1,27 +1,33 @@
-// functions/updateData.js
-
 const fs = require('fs');
-const path = require('path');
 
 exports.handler = async (event, context) => {
-    const dataFilePath = path.join(__dirname, '../data.json');
+    if (event.httpMethod !== 'POST') {
+        return {
+            statusCode: 405,
+            body: JSON.stringify({ message: 'Method Not Allowed' }),
+        };
+    }
+
+    const { serverCount, memberCount } = JSON.parse(event.body);
+
+    const data = {
+        serverCount,
+        memberCount,
+    };
 
     try {
-        const requestBody = JSON.parse(event.body);
-        const updatedData = {
-            serverCount: requestBody.serverCount,
-            memberCount: requestBody.memberCount,
-        };
-
-        fs.writeFileSync(dataFilePath, JSON.stringify(updatedData, null, 2));
+        // You can replace this with your desired method to store the data
+        fs.writeFileSync('./api/data.json', JSON.stringify(data, null, 2));
+        
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Data updated successfully' }),
+            body: JSON.stringify({ message: 'Data updated successfully!', data }),
         };
     } catch (error) {
+        console.error('Error updating data:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to update data' }),
+            body: JSON.stringify({ message: 'Error updating data', error: error.message }),
         };
     }
 };
