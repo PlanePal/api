@@ -1,21 +1,17 @@
-// functions/fetchData.js
-
 const fs = require('fs');
-const path = require('path');
 
 exports.handler = async (event, context) => {
-    const dataFilePath = path.join(__dirname, '../data.json');
-
     try {
-        const data = fs.readFileSync(dataFilePath);
+        const data = fs.readFileSync('./api/data.json', 'utf8');
         return {
             statusCode: 200,
-            body: data.toString(),
+            body: data,
         };
     } catch (error) {
+        console.error('Error reading data:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to fetch data' }),
+            body: JSON.stringify({ message: 'Error reading data', error: error.message }),
         };
     }
 };
