@@ -59,7 +59,7 @@
     <script>
         async function fetchData() {
             try {
-                const response = await fetch('https://api.github.com/repos/PlanePal/api/contents/v1/data.json');
+                const response = await fetch('https://api.github.com/repos/DevJSTAR/planepal-api/contents/api/data.json');
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: Server responded with an error!`);
                 }
