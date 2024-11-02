@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>planepal.github.io/api/data</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #f0f0f0;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #output {
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="output">
+  <pre id="jsonOutput">
+    {
+      "serverCount": 0,
+      "memberCount": 0
+    }
+  </pre>
+</div>
+
+<script>
+  async function fetchData() {
+    try {
+      const response = await fetch('https://palapi.vybo.dev/api');
+      const data = await response.json();
+
+      document.getElementById('jsonOutput').textContent = JSON.stringify({
+        serverCount: data.serverCount,
+        memberCount: data.memberCount
+      }, null, 2);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      document.getElementById('jsonOutput').textContent = `{
+        "error": "Failed to fetch data"
+      }`;
+    }
+  }
+
+  fetchData();
+</script>
+
+</body>
+</html>
