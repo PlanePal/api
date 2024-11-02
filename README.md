@@ -1,11 +1,11 @@
 # [PlanePal API](https://devjstar.github.io/planepal-api)
-[![GitHub stars](https://img.shields.io/github/stars/devjstar/planepal-api.svg?style=social&label=Stars&style=flat)](https://github.com/devjstar/planepal-api/stargazers)
-[![GitHub license](https://img.shields.io/github/license/devjstar/planepal-api.svg)](https://github.com/devjstar/planepal-api/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/planepal/api.svg?style=social&label=Stars&style=flat)](https://github.com/devjstar/planepal-api/stargazers)
+[![GitHub license](https://img.shields.io/github/license/planepal/api.svg)](https://github.com/devjstar/planepal-api/blob/main/LICENSE)
 [![Patreon](https://img.shields.io/badge/Donate-Patreon-orange.svg)](https://www.patreon.com/jstarsdev)
 <br>
 [![DevServer](https://discord.com/api/guilds/1153672454426861598/widget.png?style=shield)](https://discord.gg/GbvXQXHY6Q)
 
-**PlanePal API** is a lightweight, RESTful API designed to deliver up-to-date information on PlanePal's server and member statistics. This API allows people to seamlessly integrate real-time data about PlanePal's user base into their applications or services. https://devjstar.github.io/planepal-api
+**PlanePal API** is a lightweight, RESTful API designed to deliver up-to-date information on PlanePal's server and member statistics. This API allows people to seamlessly integrate real-time data about PlanePal's user base into their applications or services.
 
 ### Features:
 - **Live Server Count**: Get the current number of Discord servers using PlanePal.
@@ -35,7 +35,7 @@ import json
 import base64  # Import the base64 module
 
 # API endpoint URL
-url = "https://api.github.com/repos/DevJSTAR/planepal-api/contents/api/data.json"
+url = "https://api.github.com/repos/PlanePal/api/v1/data.json"
 
 # Function to get the server and member count
 def get_plane_pal_data():
@@ -71,7 +71,7 @@ get_plane_pal_data()
 
     <script>
         // API endpoint URL
-        const url = 'https://api.github.com/repos/DevJSTAR/planepal-api/contents/api/data.json';
+        const url = 'https://api.github.com/repos/PlanePal/api/v1/data.json';
 
         // Function to fetch and display data
         async function getPlanePalData() {
@@ -116,7 +116,7 @@ $color[Random]
 
 $textSplit[$getObjectValues[values; ]]
 $createObject[values;$httpRequest[$get[url];GET;;;An error occurred while fetching the content of PlanePal API!]]
-$let[url;https://raw.githubusercontent.com/DevJSTAR/planepal-api/refs/heads/main/api/data.json]
+$let[url;https://raw.githubusercontent.com/PlanePal/api/refs/heads/main/v1/data.json]
 `
 });
 ```
@@ -135,7 +135,7 @@ $color[Random]
 
 $let[servers;$httpRequest[$get[url];GET;;serverCount;An error occurred while fetching the PlanePal Server Count!]]
 $let[members;$httpRequest[$get[url];GET;;memberCount;An error occurred while fetching the PlanePal Member Count!]]
-$let[url;https://raw.githubusercontent.com/DevJSTAR/planepal-api/refs/heads/main/api/data.json]
+$let[url;https://raw.githubusercontent.com/PlanePal/api/refs/heads/main/v1/data.json]
 `
 });
 ```
